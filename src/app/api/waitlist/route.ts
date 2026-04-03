@@ -1,17 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-// Service Role Key is preferred to bypass RLS, but ANON key works if inserts are public.
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-if (!supabaseUrl || !supabaseKey) {
-    console.error("CRITICAL: Supabase environment variables missing!");
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function POST(req: Request) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+    if (!supabaseUrl || !supabaseKey) {
+        console.error("CRITICAL: Supabase environment variables missing!");
+    }
+
+    const supabase = createClient(supabaseUrl || 'https://dummy.supabase.co', supabaseKey || 'dummy');
+
     try {
         const { fullName, email, mobile } = await req.json();
 
